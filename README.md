@@ -19,12 +19,25 @@ to succeed.  If you're feeling adventurous, you may also let
 You'll need the following installed and available to be able to use
 this software:
 
-* Haskell Stack
-* AWS CLI interface
+### [Haskell Stack](https://docs.haskellstack.org/en/stable/README/)
+
+You'll want to install Stack using your local package manager (yes,
+it's available on Homebrew as `haskell-stack`), or if you're
+adventurous, using their `curl | bash` method...
+
+You'll need to add `~/.local/bin` to your `$PATH`.
+
+### AWS CLI interface
+
+I'm guessing that this is a thing you'll already have.
 
 ## Instructions
 
-tba
+To download and install the utility, simply run:
+
+```sh
+stack install forest-fire
+```
 
 # Usage
 
@@ -33,14 +46,18 @@ information.  Here's the down-low, however.
 
 ## Find out what depends on a stack
 
+Note that this performs a **dry run** (read-only).  The dependency
+tree will be printed, along with the order in which you'd have to
+perform deletions, but nothing will be executed.
+
 ```sh
-stack exec forest-fire -- "kubernetes-dynamic-91acf0ef-lifecycle"
+forest-fire "kubernetes-dynamic-91acf0ef-lifecycle"
 ```
 
 ## Perform the deletions if you're satisfied with the tree
 
 ```sh
-stack exec forest-fire -- "kubernetes-dynamic-91acf0ef-lifecycle" --delete
+forest-fire "kubernetes-dynamic-91acf0ef-lifecycle" --delete
 ```
 
 # Credits
