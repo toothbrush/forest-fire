@@ -1,8 +1,3 @@
--- TODO
--- * test suite (around JSON parsing, mostly)
--- * readme (w/ how to install and use)
--- * send to Hackage/Stackage
-
 module Lib where
 
 import Types
