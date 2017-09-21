@@ -15,11 +15,12 @@ showDeletionPlan :: String -> IO ()
 showDeletionPlan stackName = do
   putStrLn $ "Retrieving dependencies of " ++ stackName ++ "..."
   tree <- buildDependencyGraph (StackName stackName)
-  -- let tree = exampleDep2
   putStrLn "Done.  Delete these stacks in postorder traversal:\n"
   putStrLn $ drawTree (dependencyToTree tree)
   putStrLn "Or, delete manually in this order:\n"
   mapM_ putStrLn $ postorder (dependencyToTree tree)
+  putStrLn "\nIf you trust this app you can execute:"
+  putStrLn $ "forest-fire \"" ++ stackName ++ "\" --delete\n"
 
 actuallyDoTheDelete :: String -> IO ()
 actuallyDoTheDelete stackName = do
