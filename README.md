@@ -60,6 +60,22 @@ forest-fire "kubernetes-dynamic-91acf0ef-lifecycle"
 forest-fire "kubernetes-dynamic-91acf0ef-lifecycle" --delete
 ```
 
+# Do you Docker?
+
+Some people don't believe in native executables.  For them, i present the Docker version:
+
+```sh
+docker container run --rm \
+    -e AWS_SECRET_ACCESS_KEY \
+    -e AWS_ACCESS_KEY_ID \
+    -e AWS_DEFAULT_REGION \
+    paulrb/forest-fire:master yourstack
+```
+
+It is hosted on Docker Hub: https://hub.docker.com/r/paulrb/forest-fire 
+and built with Travis CI: https://travis-ci.org/toothbrush/forest-fire 
+from this repository.
+
 # Credits
 
 Thanks Redbubble, i totally should've been doing other things instead
