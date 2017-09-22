@@ -1,5 +1,5 @@
 PROJECT_NAME = forest-fire
-IMAGE_NAME = redbubble/${PROJECT_NAME}
+IMAGE_NAME = paulrb/${PROJECT_NAME}
 BUILDKITE_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 BUILDKITE_BUILD_NUMBER ?= 0
 
