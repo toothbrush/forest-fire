@@ -4,9 +4,6 @@ set -euo pipefail
 # Remove old versions:
 sudo apt-get remove docker docker-engine docker.io
 sudo apt-get update
-sudo apt-get install \
-    linux-image-extra-$(uname -r) \
-    linux-image-extra-virtual
 
 # APT over HTTPS
 sudo apt-get install \
