@@ -1,0 +1,7 @@
+.git
+.gitignore
+.stack-work
+.travis.yml
+Dockerfile
+Makefile
+update_docker.sh

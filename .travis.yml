@@ -1,0 +1,14 @@
+sudo: required
+
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - ./update_docker.sh
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+
+install:
+  - make push
+  - make clean
