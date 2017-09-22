@@ -2,6 +2,7 @@ module Main where
 
 import Lib
 import Console.Options
+import System.IO
 
 main :: IO ()
 main = defaultMain $ do
@@ -10,6 +11,7 @@ main = defaultMain $ do
   flagA    <- flag $ FlagLong "delete"
   allArgs  <- remainingArguments "FILE"
   action $ \toParam -> do
+      hSetBuffering stdout LineBuffering -- or even NoBuffering
       let reallyDelete = toParam flagA
       let stackName    = toParam allArgs
       case stackName of
