@@ -1,7 +1,0 @@
-steps:
-  - name: 'build'
-    command: ./build.sh
-    env:
-      BUILD_ARGS: push
-    agents:
-      location: aws
