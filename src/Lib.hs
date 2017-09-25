@@ -15,7 +15,7 @@ showDeletionPlan :: String -> IO ()
 showDeletionPlan stackName = do
   putStrLn $ "Retrieving dependencies of " ++ stackName ++ "..."
   tree <- buildDependencyGraph (StackName stackName)
-  putStrLn "Done.  Delete these stacks in postorder traversal:\n"
+  putStrLn "Done.  Deletion order:\n"
   putStrLn $ drawTree (dependencyToTree tree)
   putStrLn "Or, delete manually in this order:\n"
   mapM_ putStrLn $ postorder (dependencyToTree tree)
@@ -26,23 +26,28 @@ actuallyDoTheDelete :: String -> IO ()
 actuallyDoTheDelete stackName = do
   putStrLn $ "Retrieving dependencies of " ++ stackName ++ "..."
   tree <- buildDependencyGraph (StackName stackName)
+  putStrLn "Done.  Deletion order:\n"
   putStrLn $ drawTree (dependencyToTree tree)
   putStrLn "Deleting dependencies and stack..."
   mapM_ (doDeletionWait . StackName) $ postorder (dependencyToTree tree)
 
-findExportsByStack :: StackName -> IO [ExportName]
-findExportsByStack s = do
-  json <- eitherDecode <$> jsonForDescribeStacks s
-  either error (pure . map eName . concatMap sExports . sStacks) json
+class Monad m => AWSExecution m where
+  findExportsByStack :: StackName -> m [ExportName]
+  whoImportsThisValue :: ExportName -> m [StackName]
 
-whoImportsThisValue :: ExportName -> IO [StackName]
-whoImportsThisValue e = do
-  json <- eitherDecode <$> jsonForListImports e :: IO (Either String Imports)
-  either (const (pure [])) (pure . iStackNames) json
+instance AWSExecution IO where
+  findExportsByStack s = do
+    json <- eitherDecode <$> jsonForDescribeStacks s
+    either error (pure . map eName . concatMap sExports . sStacks) json
 
-buildDependencyGraph :: StackName -> IO Dependency
+  whoImportsThisValue e = do
+    json <- eitherDecode <$> jsonForListImports e :: IO (Either String Imports)
+    either (const (pure [])) (pure . iStackNames) json
+
+
+buildDependencyGraph :: AWSExecution m => StackName -> m Dependency
 buildDependencyGraph = buildDependencyGraph' [] -- the empty list is because we haven't yet queried any stacks
-  where buildDependencyGraph' :: [StackName] -> StackName -> IO Dependency
+  where buildDependencyGraph' :: AWSExecution m => [StackName] -> StackName -> m Dependency
         buildDependencyGraph' alreadySeen name = do
           outputs <- findExportsByStack name
           importers <- mapM whoImportsThisValue outputs
