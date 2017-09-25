@@ -1,3 +1,5 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 import Test.Tasty (defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase)
 
@@ -16,12 +18,16 @@ main = defaultMain tests
 trivialDepsTree =
   testCase "simple deletion case" $
       assertEqual []
-          (Identity $ Dependency (StackName "a")
+          (Dependency (StackName "a")
             [Dependency (StackName "b")
              [Dependency (StackName "c") []]])
-          (buildDependencyGraph (StackName "a"))
+          (runIdentity $ unTest1 $ buildDependencyGraph1 (StackName "a"))
+  where buildDependencyGraph1 = buildDependencyGraph :: StackName -> Test1 Dependency
 
-instance AWSExecution Identity where
+newtype Test1 a = Test1 { unTest1 :: Identity a }
+  deriving (Monad,Functor,Applicative)
+
+instance AWSExecution Test1 where
   findExportsByStack (StackName "a") = return [ExportName "a_exp"]
   findExportsByStack (StackName "b") = return [ExportName "b_exp"]
   findExportsByStack (StackName "c") = return []
