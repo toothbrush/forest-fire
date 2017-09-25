@@ -5,7 +5,7 @@ module Types where
 import GHC.Generics
 
 data Dependency = Dependency {dStackName    :: StackName,
-                              dDependencies :: [Dependency]} deriving (Show)
+                              dDependencies :: [Dependency]} deriving (Eq, Show)
 
 data Stack = Stack {sStackId   :: StackId,
                     sStackName :: StackName,

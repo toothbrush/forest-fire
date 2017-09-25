@@ -4,6 +4,7 @@ RUN stack --system-ghc --resolver=lts-9.5 --local-bin-path=/usr/local/bin setup
 RUN stack --system-ghc --resolver=lts-9.5 --local-bin-path=/usr/local/bin build --only-dependencies
 COPY . /
 RUN stack --system-ghc --resolver=lts-9.5 --local-bin-path=/usr/local/bin build
+RUN stack --system-ghc --resolver=lts-9.5 --local-bin-path=/usr/local/bin test
 
 FROM debian:stretch
 RUN apt-get update
