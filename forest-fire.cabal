@@ -1,5 +1,5 @@
 name:                forest-fire
-version:             0.1.1.1
+version:             0.1.2
 synopsis:            Recursively delete CloudFormation stacks and their dependants
 description:
   This simple tool will repeatedly query CloudFormation
@@ -31,7 +31,7 @@ library
                      , process
                      , text
                      , containers
-                     , pretty-tree
+                     , pretty-tree == 0.1.0.0
   default-language:    Haskell2010
 
 executable forest-fire

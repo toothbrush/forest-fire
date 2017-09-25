@@ -26,6 +26,7 @@ actuallyDoTheDelete :: String -> IO ()
 actuallyDoTheDelete stackName = do
   putStrLn $ "Retrieving dependencies of " ++ stackName ++ "..."
   tree <- buildDependencyGraph (StackName stackName)
+  putStrLn $ drawTree (dependencyToTree tree)
   putStrLn "Deleting dependencies and stack..."
   mapM_ (doDeletionWait . StackName) $ postorder (dependencyToTree tree)
 
