@@ -7,9 +7,13 @@ import TreeUtils
 
 import Data.Tree
 import Data.Tree.Pretty
-import Data.List
 import Data.Maybe
+import Data.List (nub, sort)
+import Data.Map (Map)
+import qualified Data.Map as Map
 import Data.Aeson
+
+import Debug.Trace
 
 showDeletionPlan :: String -> IO ()
 showDeletionPlan stackName = do
@@ -44,14 +48,12 @@ instance AWSExecution IO where
     json <- eitherDecode <$> jsonForListImports e :: IO (Either String Imports)
     either (const (pure [])) (pure . iStackNames) json
 
-
 buildDependencyGraph :: AWSExecution m => StackName -> m Dependency
-buildDependencyGraph = buildDependencyGraph' [] -- the empty list is because we haven't yet queried any stacks
-  where buildDependencyGraph' :: AWSExecution m => [StackName] -> StackName -> m Dependency
-        buildDependencyGraph' alreadySeen name = do
-          outputs <- findExportsByStack name
-          importers <- mapM whoImportsThisValue outputs
-          let downstreams = nub $ filter (`notElem` alreadySeen) $ concat importers
-          downstreamDeps <- mapM (buildDependencyGraph' (alreadySeen ++ downstreams)) downstreams
-          pure $ Dependency name downstreamDeps
-
+buildDependencyGraph name | trace ("\nbDG called " ++ show name ++ "\n") False = undefined
+buildDependencyGraph name = do
+    outputs <- findExportsByStack name
+    importers <- mapM whoImportsThisValue outputs
+    let children = sort $ nub $ concat importers
+    downstreamDeps <- mapM buildDependencyGraph children
+    pure $ Map.unionsWith (\new old->nub ((++) new old))
+                          (downstreamDeps ++ [Map.singleton name children])
