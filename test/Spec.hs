@@ -4,17 +4,21 @@ import Test.Tasty (defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase)
 
 import Control.Monad.Identity
+import Data.Aeson
+import qualified Data.ByteString.Lazy.Char8 as B
 import Data.Map (Map)
 import qualified Data.Map as Map
 
 import Types
 import Lib
+import JSONInstances
 
 tests =
   testGroup
     "Unit tests"
     [trivialDepsTree, dagIsntTree
-    ,deletionTrivial, deletionDAG]
+    ,deletionTrivial, deletionDAG
+    ,testJSONparsing]
 
 main = defaultMain tests
 
@@ -71,3 +75,14 @@ deletionDAG =
           [StackName "c", StackName "d", StackName "a"]
           (deletionOrder (runIdentity $ unTest2 $ buildDependencyGraph2 (StackName "a")))
   where buildDependencyGraph2 = buildDependencyGraph :: StackName -> Test2 Dependency
+
+
+testJSONparsing =
+  testCase "test parsing AWS output" $ do
+    out <- stuff
+    assertEqual []
+      [ExportName "kubernetes-staging-controller-ELBControllerInternalHostedZone"
+      ,ExportName "kubernetes-staging-controller-IAMRole"]
+      out
+    where stuff = do json <- eitherDecode <$> B.readFile "test/aws-output-test.json"
+                     either error (pure . map eName . concatMap sExports . sStacks) json

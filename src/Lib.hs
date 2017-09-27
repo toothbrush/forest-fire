@@ -3,53 +3,50 @@ module Lib where
 import Types
 import JSONInstances
 import AWSCommands
-import TreeUtils
 
-import Data.Tree
-import Data.Tree.Pretty
 import Data.Maybe
-import Data.List (nub, sort)
+import Data.Tuple
+import Data.List (nub, sort, delete, groupBy)
+import Data.Function (on)
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Aeson
 
 import Debug.Trace
 
+outputDeletionPlan :: String -> IO Dependency
+outputDeletionPlan stackName = do
+  putStrLn $ "Retrieving dependencies of " ++ stackName ++ "..."
+  dag <- buildDependencyGraph (StackName stackName)
+  putStrLn "Done.  Deletion order:\n"
+  mapM_ print $ deletionOrder dag
+  return dag
+
 showDeletionPlan :: String -> IO ()
 showDeletionPlan stackName = do
-  putStrLn $ "Retrieving dependencies of " ++ stackName ++ "..."
-  tree <- buildDependencyGraph (StackName stackName)
-  putStrLn "Done.  Deletion order:\n"
-  putStrLn $ drawTree (dependencyToTree tree)
-  putStrLn "Or, delete manually in this order:\n"
-  mapM_ putStrLn $ postorder (dependencyToTree tree)
+  dag <- outputDeletionPlan stackName
   putStrLn "\nIf you trust this app you can execute:"
   putStrLn $ "forest-fire \"" ++ stackName ++ "\" --delete\n"
 
 actuallyDoTheDelete :: String -> IO ()
 actuallyDoTheDelete stackName = do
-  putStrLn $ "Retrieving dependencies of " ++ stackName ++ "..."
-  tree <- buildDependencyGraph (StackName stackName)
-  putStrLn "Done.  Deletion order:\n"
-  putStrLn $ drawTree (dependencyToTree tree)
+  dag <- outputDeletionPlan stackName
   putStrLn "Deleting dependencies and stack..."
-  mapM_ (doDeletionWait . StackName) $ postorder (dependencyToTree tree)
+  mapM_ doDeletionWait $ deletionOrder dag
 
-class Monad m => AWSExecution m where
-  findExportsByStack :: StackName -> m [ExportName]
-  whoImportsThisValue :: ExportName -> m [StackName]
+deletionOrder :: Dependency -> [StackName]
+deletionOrder d | d == Map.empty = []
+deletionOrder d | null (safe d) = error "bork bork circular dependencies!"
+deletionOrder d = safe d ++ deletionOrder (without (safe d) d)
+  where
+    without :: [StackName] -> Dependency -> Dependency
+    without [] d = d
+    without (stack : ss) d = Map.map (delete stack) $ Map.delete stack (without ss d)
 
-instance AWSExecution IO where
-  findExportsByStack s = do
-    json <- eitherDecode <$> jsonForDescribeStacks s
-    either error (pure . map eName . concatMap sExports . sStacks) json
-
-  whoImportsThisValue e = do
-    json <- eitherDecode <$> jsonForListImports e :: IO (Either String Imports)
-    either (const (pure [])) (pure . iStackNames) json
+safe :: Dependency -> [StackName]
+safe d = Map.keys $ Map.filter null d
 
 buildDependencyGraph :: AWSExecution m => StackName -> m Dependency
-buildDependencyGraph name | trace ("\nbDG called " ++ show name ++ "\n") False = undefined
 buildDependencyGraph name = do
     outputs <- findExportsByStack name
     importers <- mapM whoImportsThisValue outputs

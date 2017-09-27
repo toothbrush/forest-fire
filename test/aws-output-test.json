@@ -1,0 +1,42 @@
+{
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:915803415974:stack/kubernetes-staging-controller/9492ad50-91dd-11e7-907d-50d5ca63268e", 
+            "Description": "Controller nodes for Redbubble Kubernetes cluster", 
+            "Parameters": [
+                {
+                    "ParameterValue": "v1.7.4_coreos.0", 
+                    "ParameterKey": "KubernetesVersion"
+                }, 
+                {
+                    "ParameterValue": "kubernetes-staging-security-groups", 
+                    "ParameterKey": "KubernetesSecurityGroupStackName"
+                }
+            ], 
+            "Tags": [], 
+            "Outputs": [
+                {
+                    "Description": "The Hosted Zone for the internal controller ELB", 
+                    "ExportName": "kubernetes-staging-controller-ELBControllerInternalHostedZone", 
+                    "OutputKey": "ELBControllerInternalHostedZone", 
+                    "OutputValue": "Z35SXDOTRQ7X7K"
+                }, 
+                {
+                    "Description": "The IAM Role given to all controller instances", 
+                    "ExportName": "kubernetes-staging-controller-IAMRole", 
+                    "OutputKey": "IAMRoleController", 
+                    "OutputValue": "kubernetes-staging-controller-IAMRole-18IZCV2F80E1N"
+                }
+            ], 
+            "CreationTime": "2017-09-05T01:57:32.472Z", 
+            "Capabilities": [
+                "CAPABILITY_NAMED_IAM"
+            ], 
+            "StackName": "kubernetes-staging-controller", 
+            "NotificationARNs": [], 
+            "StackStatus": "UPDATE_COMPLETE", 
+            "DisableRollback": false, 
+            "LastUpdatedTime": "2017-09-25T00:39:00.340Z"
+        }
+    ]
+}
