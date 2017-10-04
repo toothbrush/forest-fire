@@ -4,15 +4,9 @@ import Types
 import JSONInstances
 import AWSCommands
 
-import Data.Maybe
-import Data.Tuple
-import Data.List (nub, sort, delete, groupBy)
-import Data.Function (on)
+import Data.List (nub, sort, delete)
 import Data.Map (Map)
 import qualified Data.Map as Map
-import Data.Aeson
-
-import Debug.Trace
 
 outputDeletionPlan :: String -> IO Dependency
 outputDeletionPlan stackName = do
