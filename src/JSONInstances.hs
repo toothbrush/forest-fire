@@ -3,6 +3,7 @@
 module JSONInstances where
 
 import Types
+import AWSCommands
 
 import Data.Aeson
 import Data.Aeson.Types    -- that's where Parser comes from
@@ -28,3 +29,16 @@ instance FromJSON Imports where
 instance FromJSON StackName
 instance FromJSON StackId
 instance FromJSON ExportName
+
+class Monad m => AWSExecution m where
+  findExportsByStack :: StackName -> m [ExportName]
+  whoImportsThisValue :: ExportName -> m [StackName]
+
+instance AWSExecution IO where
+  findExportsByStack s = do
+    json <- eitherDecode <$> jsonForDescribeStacks s :: IO (Either String Stacks)
+    either error (pure . map eName . concatMap sExports . sStacks) json
+
+  whoImportsThisValue e = do
+    json <- eitherDecode <$> jsonForListImports e :: IO (Either String Imports)
+    either (const (pure [])) (pure . iStackNames) json

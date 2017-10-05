@@ -12,9 +12,9 @@ executeAWScommand allowFail args = do
   case code of
     ExitSuccess -> pure (B.pack stdout)
     _ -> if allowFail
-         then pure (B.pack "")
-         else do putStrLn stderr
-                 error $ show code
+             then pure (B.pack "")
+             else do putStrLn stderr
+                     error $ show code
 
 jsonForDescribeStacks :: StackName -> IO B.ByteString
 jsonForDescribeStacks (StackName s) =

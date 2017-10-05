@@ -3,9 +3,9 @@
 module Types where
 
 import GHC.Generics
+import Data.Map (Map)
 
-data Dependency = Dependency {dStackName    :: StackName,
-                              dDependencies :: [Dependency]} deriving (Show)
+type Dependency = Map StackName [StackName] -- list of nodes with outgoing edge targets
 
 data Stack = Stack {sStackId   :: StackId,
                     sStackName :: StackName,
@@ -14,7 +14,12 @@ data Stack = Stack {sStackId   :: StackId,
 newtype Stacks = Stacks { sStacks :: [Stack]} deriving Show
 newtype Export = Export { eName :: ExportName} deriving Show
 
-newtype StackName  = StackName  String      deriving (Show, Generic, Eq)
+newtype StackName  = StackName  String      deriving (Show, Generic, Eq, Ord)
 newtype StackId    = StackId    String      deriving (Show, Generic, Eq)
-newtype ExportName = ExportName String      deriving (Show, Generic)
+newtype ExportName = ExportName String      deriving (Show, Generic, Eq)
 newtype Imports    = Imports    { iStackNames :: [StackName] } deriving (Show)
+
+-- Don't add this as a record field name above, it messes up the JSON
+-- parser (specifically: makes it expect a record instead of just a
+-- string).
+snStackName (StackName s) = s
