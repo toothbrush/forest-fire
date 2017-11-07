@@ -1,0 +1,43 @@
+{
+    "Stacks": [
+        {
+            "StackId": "arn:aws:cloudformation:us-east-1:91",
+            "Parameters": [
+                {
+                    "ParameterValue": "10",
+                    "ParameterKey": "desiredAgentsUS"
+                },
+                {
+                    "ParameterValue": "ami-4xxxxxx6",
+                    "ParameterKey": "amiId"
+                },
+                {
+                    "ParameterValue": "30",
+                    "ParameterKey": "maxAgents"
+                }
+            ],
+            "Tags": [],
+            "Outputs": [
+                {
+                    "Description": "Name of the IAM role applied to all agents",
+                    "ExportName": "buildkite-agent-nnruto-gd-ut-oem",
+                    "OutputKey": "RoleName",
+                    "OutputValue": "buildkite-gtnnpouireuuaRlT8KUE"
+                },
+                {
+                    "Description": "ARN of the IAM role applied to all agents",
+                    "OutputKey": "RoleARN",
+                    "OutputValue": "arn:aws:iam::91"
+                }
+            ],
+            "CreationTime": "2017-11-03T06:58:49.705Z",
+            "Capabilities": [
+                "CAPABILITY_NAMED_IAM"
+            ],
+            "StackName": "buildkite-agent-non-production-upgrade-ubuntu",
+            "NotificationARNs": [],
+            "StackStatus": "CREATE_COMPLETE",
+            "DisableRollback": false
+        }
+    ]
+}

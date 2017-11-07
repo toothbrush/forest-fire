@@ -18,6 +18,7 @@ tests =
     "Unit tests"
     [trivialDepsTree, dagIsntTree
     ,deletionTrivial, deletionDAG
+    ,ignoreUnnamedExports
     ,testJSONparsing]
 
 main = defaultMain tests
@@ -86,3 +87,15 @@ testJSONparsing =
       out
     where stuff = do json <- eitherDecode <$> B.readFile "test/aws-output-test.json"
                      either error (pure . map eName . concatMap sExports . sStacks) json
+
+-- TODO make this actually use the code from findExportsByStack..
+ignoreUnnamedExports =
+  testCase "test stack-describe with missing ExportNames" $ do
+    out <- stuff
+    assertEqual []
+      [ExportName "buildkite-agent-nnruto-gd-ut-oem"]
+      out
+    where stuff = do json <- eitherDecode <$> B.readFile "test/empty-exportname.json"
+                     either error (pure . map eName . filter anon . concatMap sExports . sStacks) json
+          anon (Export name) | name == ExportName "" = False
+                             | otherwise             = True

@@ -10,7 +10,7 @@ import Data.Aeson.Types    -- that's where Parser comes from
 
 instance FromJSON Export where
   parseJSON = withObject "Export" $ \t ->
-    Export <$> t .: "ExportName"
+    Export <$> t .:? "ExportName" .!= ExportName ""
 
 instance FromJSON Stacks where
   parseJSON = withObject "Stacks" $ \t ->
@@ -37,7 +37,9 @@ class Monad m => AWSExecution m where
 instance AWSExecution IO where
   findExportsByStack s = do
     json <- eitherDecode <$> jsonForDescribeStacks s :: IO (Either String Stacks)
-    either error (pure . map eName . concatMap sExports . sStacks) json
+    either error (pure . map eName . filter anon . concatMap sExports . sStacks) json
+      where anon (Export name) | name == ExportName "" = False
+                               | otherwise             = True
 
   whoImportsThisValue e = do
     json <- eitherDecode <$> jsonForListImports e :: IO (Either String Imports)
