@@ -33,8 +33,7 @@ main = defaultMain $ do
                              putStrLn usage
                              exitFailure
 
-printVersion = do
-  putStrLn $ "forest-fire v" ++ showVersion version
+printVersion = putStrLn $ "forest-fire v" ++ showVersion version
 
 descr = "Recursively find and delete CFn dependencies!\n\n"
 usage = "usage: forest-fire <stackname> [--delete]\n" ++
