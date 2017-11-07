@@ -19,8 +19,7 @@ outputDeletionPlan stackName = do
 showDeletionPlan :: String -> IO ()
 showDeletionPlan stackName = do
   dag <- outputDeletionPlan stackName
-  putStrLn "\nIf you trust this app you can execute:"
-  putStrLn $ "forest-fire \"" ++ stackName ++ "\" --delete\n"
+  return ()
 
 actuallyDoTheDelete :: String -> IO ()
 actuallyDoTheDelete stackName = do

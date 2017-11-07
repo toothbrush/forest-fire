@@ -8,6 +8,7 @@ import Console.Options
 import System.IO
 import System.Exit
 import Data.Monoid ((<>), mappend)
+import Data.List (intercalate)
 
 main :: IO ()
 main = defaultMain $ do
@@ -26,12 +27,20 @@ main = defaultMain $ do
       case showVersion of
         True  -> printVersion
         False -> case stackName of
-                   [s] -> if reallyDelete
-                          then actuallyDoTheDelete s
-                          else showDeletionPlan s
-                   _   -> do putStrLn "[ERROR] Please specify one stack name."
+                   (x:xs) -> if reallyDelete
+                             then doDeletes (x:xs)
+                             else showDeletes (x:xs)
+                   []  -> do putStrLn "[ERROR] Please specify at least one stack name."
                              putStrLn usage
                              exitFailure
+
+doDeletes :: [String] -> IO ()
+doDeletes xs = mapM_ actuallyDoTheDelete xs
+
+showDeletes :: [String] -> IO ()
+showDeletes xs = do mapM_ showDeletionPlan xs
+                    putStrLn "\nIf you trust this app you can execute:"
+                    putStrLn $ "forest-fire " ++ intercalate " " xs ++ " --delete\n"
 
 printVersion = putStrLn $ "forest-fire v" ++ showVersion version
 
