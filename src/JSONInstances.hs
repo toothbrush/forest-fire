@@ -37,7 +37,7 @@ class Monad m => AWSExecution m where
 instance AWSExecution IO where
   findExportsByStack s = do
     json <- eitherDecode <$> jsonForDescribeStacks s :: IO (Either String Stacks)
-    either error (pure . map eName . filter anon . concatMap sExports . sStacks) json
+    either (const (pure [])) (pure . map eName . filter anon . concatMap sExports . sStacks) json
       where anon (Export name) | name == ExportName "" = False
                                | otherwise             = True
 

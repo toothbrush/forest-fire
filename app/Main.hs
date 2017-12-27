@@ -23,18 +23,23 @@ main = defaultMain $ do
       let showVersion  = toParam flagV
       let reallyDelete = toParam flagA
       let stackName    = toParam allArgs
-      case showVersion of
-        True  -> printVersion
-        False -> case stackName of
-                   [s] -> if reallyDelete
-                          then actuallyDoTheDelete s
-                          else showDeletionPlan s
-                   _   -> do putStrLn "[ERROR] Please specify one stack name."
-                             putStrLn usage
-                             exitFailure
+      if showVersion
+        then printVersion
+        else (case stackName of
+                xs@(_:_) -> if reallyDelete
+                            then mapM_ actuallyDoTheDelete xs
+                            else showDeletes xs
+                []  -> do putStrLn "[ERROR] Please specify at least one stack name."
+                          putStrLn usage
+                          exitFailure)
 
-printVersion = putStrLn $ "forest-fire v" ++ showVersion version
+showDeletes :: [String] -> IO ()
+showDeletes xs = do mapM_ outputDeletionPlan xs
+                    putStrLn "\nIf you trust this app you can execute:"
+                    putStrLn $ "forest-fire " ++ unwords xs ++ " --delete\n"
+
+printVersion = putStrLn $ "forest-fire version " ++ showVersion version
 
 descr = "Recursively find and delete CFn dependencies!\n\n"
-usage = "usage: forest-fire <stackname> [--delete]\n" ++
+usage = "usage: forest-fire [--delete] <stacknames>+\n" ++
         "or:    forest-fire --help"

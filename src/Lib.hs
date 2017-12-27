@@ -13,14 +13,8 @@ outputDeletionPlan stackName = do
   putStrLn $ "Retrieving dependencies of " ++ stackName ++ "..."
   dag <- buildDependencyGraph (StackName stackName)
   putStrLn "Done.  Deletion order:\n"
-  mapM_ print $ deletionOrder dag
+  mapM_ (putStrLn . (++) "  " . show) $ deletionOrder dag
   return dag
-
-showDeletionPlan :: String -> IO ()
-showDeletionPlan stackName = do
-  dag <- outputDeletionPlan stackName
-  putStrLn "\nIf you trust this app you can execute:"
-  putStrLn $ "forest-fire \"" ++ stackName ++ "\" --delete\n"
 
 actuallyDoTheDelete :: String -> IO ()
 actuallyDoTheDelete stackName = do
@@ -46,5 +40,5 @@ buildDependencyGraph name = do
     importers <- mapM whoImportsThisValue outputs
     let children = sort $ nub $ concat importers
     downstreamDeps <- mapM buildDependencyGraph children
-    pure $ Map.unionsWith (\new old->nub ((++) new old))
+    pure $ Map.unionsWith (\new old -> nub $ (++) new old)
                           (downstreamDeps ++ [Map.singleton name children])

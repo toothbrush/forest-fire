@@ -14,7 +14,7 @@ data Stack = Stack {sStackId   :: StackId,
 newtype Stacks = Stacks { sStacks :: [Stack]} deriving Show
 newtype Export = Export { eName :: ExportName} deriving Show
 
-newtype StackName  = StackName  String      deriving (Show, Generic, Eq, Ord)
+newtype StackName  = StackName  String      deriving (Generic, Eq, Ord)
 newtype StackId    = StackId    String      deriving (Show, Generic, Eq)
 newtype ExportName = ExportName String      deriving (Show, Generic, Eq)
 newtype Imports    = Imports    { iStackNames :: [StackName] } deriving (Show)
@@ -23,3 +23,6 @@ newtype Imports    = Imports    { iStackNames :: [StackName] } deriving (Show)
 -- parser (specifically: makes it expect a record instead of just a
 -- string).
 snStackName (StackName s) = s
+
+instance Show StackName where
+  show (StackName s) = s
