@@ -24,7 +24,8 @@ jsonForDescribeStacks (StackName s) =
 
 jsonForListImports :: ExportName -> IO B.ByteString
 jsonForListImports (ExportName e) =
-  -- this one's optional, don't fail.
+  -- Don't fail: if an export isn't imported by anything, aws-cli
+  -- returns an error.
   executeAWScommand True [ "cloudformation"
                          , "list-imports"
                          , "--export-name", e]
