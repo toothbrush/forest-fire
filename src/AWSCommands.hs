@@ -20,9 +20,9 @@ executeAWScommand allowFail args = do
 
 jsonForDescribeStacks :: StackName -> IO B.ByteString
 jsonForDescribeStacks (StackName s) =
-  executeAWScommand False [ "cloudformation"
-                          , "describe-stacks"
-                          , "--stack-name", s]
+  executeAWScommand True [ "cloudformation"
+                         , "describe-stacks"
+                         , "--stack-name", s]
 
 jsonForListImports :: ExportName -> IO B.ByteString
 jsonForListImports (ExportName e) =
