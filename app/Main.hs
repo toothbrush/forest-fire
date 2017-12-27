@@ -8,7 +8,6 @@ import Console.Options
 import System.IO
 import System.Exit
 import Data.Monoid ((<>), mappend)
-import Data.List (intercalate)
 
 main :: IO ()
 main = defaultMain $ do
