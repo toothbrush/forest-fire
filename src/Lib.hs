@@ -13,7 +13,7 @@ outputDeletionPlan stackName = do
   putStrLn $ "Retrieving dependencies of " ++ stackName ++ "..."
   dag <- buildDependencyGraph (StackName stackName)
   putStrLn "Done.  Deletion order:\n"
-  mapM_ print $ deletionOrder dag
+  mapM_ (putStrLn . (++) "  " . show) $ deletionOrder dag
   return dag
 
 showDeletionPlan :: String -> IO ()
