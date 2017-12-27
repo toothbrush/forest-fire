@@ -14,10 +14,10 @@ to succeed.  If you're feeling adventurous, you may also let
 
 # Installation
 
-## Prerequisites
+## Prerequisites for hacking
 
-You'll need the following installed and available to be able to use
-this software:
+You'll need the following installed and available to be able to hack
+on this software:
 
 ### [Haskell Stack](https://docs.haskellstack.org/en/stable/README/)
 
@@ -33,10 +33,11 @@ I'm guessing that this is a thing you'll already have.
 
 ## Instructions
 
-To download and install the utility, simply run:
+If you're not interested in hacking on this project, you can simply
+download and install it.  Run:
 
 ```sh
-stack install forest-fire
+cabal update; cabal install forest-fire
 ```
 
 # Usage
@@ -72,8 +73,8 @@ docker container run --rm \
     paulrb/forest-fire:master yourstack
 ```
 
-It is hosted on Docker Hub: https://hub.docker.com/r/paulrb/forest-fire 
-and built with Travis CI: https://travis-ci.org/toothbrush/forest-fire 
+It is hosted on Docker Hub: https://hub.docker.com/r/paulrb/forest-fire
+and built with Travis CI: https://travis-ci.org/toothbrush/forest-fire
 from this repository.
 
 # Credits
