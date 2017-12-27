@@ -16,11 +16,6 @@ outputDeletionPlan stackName = do
   mapM_ (putStrLn . (++) "  " . show) $ deletionOrder dag
   return dag
 
-showDeletionPlan :: String -> IO ()
-showDeletionPlan stackName = do
-  dag <- outputDeletionPlan stackName
-  return ()
-
 actuallyDoTheDelete :: String -> IO ()
 actuallyDoTheDelete stackName = do
   dag <- outputDeletionPlan stackName

@@ -12,11 +12,11 @@ executeAWScommand allowFail args = do
   case code of
     ExitSuccess -> pure (B.pack stdout)
     _ -> if allowFail
-             then do putStrLn "[FAIL] Command failed, continuing."
-                     pure (B.pack "")
-             else do putStrLn "[FAIL] Aborting."
-                     putStrLn stderr
-                     error $ show code
+         then do putStrLn "[FAIL] Command failed, continuing."
+                 pure (B.pack "")
+         else do putStrLn "[FAIL] Aborting."
+                 putStrLn stderr
+                 error $ show code
 
 jsonForDescribeStacks :: StackName -> IO B.ByteString
 jsonForDescribeStacks (StackName s) =
@@ -35,13 +35,13 @@ jsonForListImports (ExportName e) =
 doDeletionWait :: StackName -> IO ()
 doDeletionWait (StackName s) = do
   putStrLn $ "Issuing delete command on stack " ++ s ++ "."
-  res <- executeAWScommand False [ "cloudformation"
-                                 , "delete-stack"
-                                 , "--stack-name", s]
+  _ <- executeAWScommand False [ "cloudformation"
+                               , "delete-stack"
+                               , "--stack-name", s]
   putStrLn "Awaiting completion... (60 minute timeout)"
-  res <- executeAWScommand False [ "cloudformation"
-                                 , "wait"
-                                 , "stack-delete-complete"
-                                 , "--no-paginate"
-                                 , "--stack-name", s]
+  _ <- executeAWScommand False [ "cloudformation"
+                               , "wait"
+                               , "stack-delete-complete"
+                               , "--no-paginate"
+                               , "--stack-name", s]
   putStrLn $ "Removal of " ++ s ++ " complete."

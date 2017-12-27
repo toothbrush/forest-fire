@@ -27,23 +27,23 @@ main = defaultMain $ do
       if showVersion
         then printVersion
         else (case stackName of
-                 (x:xs) -> if reallyDelete
-                           then doDeletes (x:xs)
-                           else showDeletes (x:xs)
-                 []  -> do putStrLn "[ERROR] Please specify at least one stack name."
-                           putStrLn usage
-                           exitFailure)
+                xs@(_:_) -> if reallyDelete
+                            then doDeletes xs
+                            else showDeletes xs
+                []  -> do putStrLn "[ERROR] Please specify at least one stack name."
+                          putStrLn usage
+                          exitFailure)
 
 doDeletes :: [String] -> IO ()
 doDeletes = mapM_ actuallyDoTheDelete
 
 showDeletes :: [String] -> IO ()
-showDeletes xs = do mapM_ showDeletionPlan xs
+showDeletes xs = do mapM_ outputDeletionPlan xs
                     putStrLn "\nIf you trust this app you can execute:"
                     putStrLn $ "forest-fire " ++ unwords xs ++ " --delete\n"
 
 printVersion = putStrLn $ "forest-fire version " ++ showVersion version
 
 descr = "Recursively find and delete CFn dependencies!\n\n"
-usage = "usage: forest-fire <stackname> [--delete]\n" ++
+usage = "usage: forest-fire [--delete] <stacknames>+\n" ++
         "or:    forest-fire --help"
