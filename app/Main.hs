@@ -27,14 +27,11 @@ main = defaultMain $ do
         then printVersion
         else (case stackName of
                 xs@(_:_) -> if reallyDelete
-                            then doDeletes xs
+                            then mapM_ actuallyDoTheDelete xs
                             else showDeletes xs
                 []  -> do putStrLn "[ERROR] Please specify at least one stack name."
                           putStrLn usage
                           exitFailure)
-
-doDeletes :: [String] -> IO ()
-doDeletes = mapM_ actuallyDoTheDelete
 
 showDeletes :: [String] -> IO ()
 showDeletes xs = do mapM_ outputDeletionPlan xs
