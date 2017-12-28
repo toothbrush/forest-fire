@@ -47,15 +47,15 @@ information.  Here's the down-low, however.
 
 ## Find out what depends on a stack
 
-Note that this performs a **dry run** (read-only).  The dependency
-tree will be printed, along with the order in which you'd have to
-perform deletions, but nothing will be executed.
+Note that this performs a **dry run** (read-only).  The order in which
+you'd have to perform deletions will be printed, but nothing will be
+executed.
 
 ```sh
 forest-fire "kubernetes-dynamic-91acf0ef-lifecycle"
 ```
 
-## Perform the deletions if you're satisfied with the tree
+## Perform the deletions if you're satisfied with the results
 
 ```sh
 forest-fire "kubernetes-dynamic-91acf0ef-lifecycle" --delete
@@ -63,7 +63,8 @@ forest-fire "kubernetes-dynamic-91acf0ef-lifecycle" --delete
 
 # Do you Docker?
 
-Some people don't believe in native executables.  For them, i present the Docker version:
+Some people don't believe in native executables.  For them, i present
+the Dockerised version:
 
 ```sh
 docker container run --rm \
