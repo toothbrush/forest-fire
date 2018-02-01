@@ -14,10 +14,17 @@ to succeed.  If you're feeling adventurous, you may also let
 
 # Installation
 
+If you're not interested in hacking on this project, you can simply
+download and install it.  Run:
+
+```sh
+cabal update; cabal install forest-fire
+```
+
 ## Prerequisites for hacking
 
 You'll need the following installed and available to be able to hack
-on this software:
+on or contribute to this software:
 
 ### [Haskell Stack](https://docs.haskellstack.org/en/stable/README/)
 
@@ -31,15 +38,6 @@ You'll need to add `~/.local/bin` to your `$PATH`.
 
 I'm guessing that this is a thing you'll already have.
 
-## Instructions
-
-If you're not interested in hacking on this project, you can simply
-download and install it.  Run:
-
-```sh
-cabal update; cabal install forest-fire
-```
-
 # Usage
 
 If you simply run the tool without arguments, it'll print usage
@@ -47,9 +45,11 @@ information.  Here's the down-low, however.
 
 ## Find out what depends on a stack
 
-Note that this performs a **dry run** (read-only).  The order in which
+Note that by default `forest-fire` performs a **dry run** (read-only).  The order in which
 you'd have to perform deletions will be printed, but nothing will be
 executed.
+
+One or more stack names can be provided as command-line arguments.
 
 ```sh
 forest-fire "kubernetes-dynamic-91acf0ef-lifecycle"
