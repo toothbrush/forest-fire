@@ -1,16 +1,16 @@
 # forest-fire [![Build Status](https://travis-ci.org/toothbrush/forest-fire.svg?branch=master)](https://travis-ci.org/toothbrush/forest-fire)
 
 This is a little command-line tool with an ill-advised name, to easily
-tear down CloudFormation stacks which have outputs that other stacks
+tear down CloudFormation stacks which have exports that other stacks
 depend on.  In the AWS Console this is rather annoying, since you have
 to manually chase up dependencies.
 
 This tool simply interrogates the `aws-cli` tool about the stack
-you're trying to delete, finds out its outputs, and checks whether any
-currently-active stacks are importing them.  The output is a
-dependency tree, which trivially tells us the order of deletion for it
-to succeed.  If you're feeling adventurous, you may also let
-`forest-fire` do the actual deletion for you.
+you're trying to delete, finds out its exports, and checks whether any
+currently-active stacks are importing them.  The result is a
+dependency tree, which trivially tells us the correct order of deletion.
+If you're feeling credulous, you may also let
+`forest-fire` do the actual deletion for you with the `--delete` flag.
 
 # Installation
 
@@ -32,6 +32,12 @@ cabal install forest-fire           # Install forest-fire for current user
 ```
 
 You'll then need to add something like `~/Library/Haskell/bin` to your `$PATH`; this is where Cabal installs executables.
+
+Try the following command for enlightenment.
+
+```sh
+forest-fire --help
+```
 
 ## Prerequisites for hacking
 
