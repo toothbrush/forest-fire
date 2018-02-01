@@ -18,7 +18,9 @@ If you're not interested in hacking on this project, you can simply
 download and install it.  Run:
 
 ```sh
-cabal update; cabal install forest-fire
+brew cask install haskell-platform  # This gives you the Cabal package manager
+cabal update                        # Update packages
+cabal install forest-fire           # Install forest-fire for current user
 ```
 
 ## Prerequisites for hacking
