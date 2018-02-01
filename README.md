@@ -15,13 +15,23 @@ to succeed.  If you're feeling adventurous, you may also let
 # Installation
 
 If you're not interested in hacking on this project, you can simply
-download and install it.  Run:
+download and install it.  You'll need the Cabal (not-quite-)package manager for that.
+
+To get Cabal, do something like this:
 
 ```sh
-brew cask install haskell-platform  # This gives you the Cabal package manager
+brew cask install haskell-platform      # For Homebrew on macOS
+sudo apt-get install haskell-platform   # For Ubuntu / Debian-like distros
+```
+
+Then install `forest-fire`:
+
+```sh
 cabal update                        # Update packages
 cabal install forest-fire           # Install forest-fire for current user
 ```
+
+You'll then need to add something like `~/Library/Haskell/bin` to your `$PATH`; this is where Cabal installs executables.
 
 ## Prerequisites for hacking
 
